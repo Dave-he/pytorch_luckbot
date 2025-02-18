@@ -37,7 +37,7 @@ value_generator = cycle_values()
 
 @app.route('/')
 def index():
-    return redirect(next(value_generator))
+    return 'https://' + redirect(next(value_generator))
 
 
 if __name__ == '__main__':
