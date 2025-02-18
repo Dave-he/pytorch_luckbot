@@ -1,11 +1,11 @@
 import torch
 
 from nets import LSTMModel
-from train import train_model
+from train import train_model, save_model
 from dataloader import load_data
-from config import *
+from config import load_config, get_config, get_config_int
 
-# 加载配置文件
+# 加载配置文
 load_config()
 
 # 3. 定义红球不重复的物理信息损失
@@ -43,7 +43,8 @@ def create_data_loader(file_path):
     inputs = torch.tensor(inputs, dtype=torch.float32)
     targets = torch.tensor(targets, dtype=torch.float32)
     dataset = torch.utils.data.TensorDataset(inputs, targets)
-    data_loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)
+    data_loader = torch.utils.data.DataLoader(
+        dataset, batch_size=batch_size, shuffle=True)
     return data_loader
 
 # 主函数
@@ -51,16 +52,16 @@ def main(file_path):
     train_loader = create_data_loader(file_path)
     model = LSTMModel()
     criterion = total_loss
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
+    optimizer = torch.optim.Adam(
+        model.parameters(), lr=0.001, weight_decay=0.0001)
+    scheduler = torch.optim.lr_scheduler.StepLR(
+        optimizer, step_size=10, gamma=0.1)
     trained_model = train_model(
         model, train_loader, criterion, optimizer, scheduler)
 
     # 保存模型
     key = get_config('MODEL', 'pinn_key')
-    model_path = f'models/lottery_{key}.pth'
-    torch.save(trained_model.state_dict(), model_path)
-    print(f"模型已保存到 {model_path}")
+    save_model(trained_model, key)
 
 
 if __name__ == "__main__":

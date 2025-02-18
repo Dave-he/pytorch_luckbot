@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from nets.lstmNet import LSTMModel
-from train import train_model
+from train import train_model, save_model
 from dataloader import load_data
 from config import *
 
@@ -99,11 +99,7 @@ def main(file_path):
 
     model = LSTMModel()
     trained_model = train(model, X_train, y_train)
-    # 保存模型
-    model_path = f'models/lottery_{get_config('MODEL', 'lstm_key')}.pth'
-    torch.save(trained_model.state_dict(), model_path)
-    print(f"模型已保存到 {model_path}")
-
+    save_model(trained_model, get_config('MODEL', 'lstm_key'))
     evaluate_model(trained_model, X_test, y_test, scaler)
 
 

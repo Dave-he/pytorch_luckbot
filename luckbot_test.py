@@ -63,11 +63,11 @@ def main(file_path):
     scaler.fit_transform(features)
 
     model = LSTMModel()
-    model_path = f'models/lottery_{get_config('MODEL', 'pinn_key')}.pth'
+    model_path = f'models/lottery_{get_config('MODEL', 'lstm_key')}.pth'
     model.load_state_dict(torch.load(model_path))
 
     # 输入时间
-    input_time = '2025016'  # 替换为实际的输入时间
+    input_time = '2025017'  # 替换为实际的输入时间
     prediction = predict_single_point_by_time(model, input_time, data, scaler)
     if prediction:
         print(f"输入时间 {input_time} 的单点预测结果（6 个红球 + 1 个蓝球）: {prediction}")
